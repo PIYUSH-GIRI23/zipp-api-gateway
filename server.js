@@ -16,12 +16,14 @@ const PORT = process.env.PORT;
 async function startServer() {
     try{
         app.use(cors({
-            origin: 'http://localhost:5173',
-            credentials: true, 
+            origin: [
+                'https://zipp.piyushx.tech',
+                'http://localhost:5173'
+            ],
+            credentials: true,
             exposedHeaders: ['new-access-token', 'new-refresh-token']
         }));
-        
-        
+
         app.use(ratelimit);
         
         app.get('/', (req, res) => {
