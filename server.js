@@ -1,47 +1,49 @@
 import express from 'express';
-import {ratelimit} from './rate_limiter/ratelimit.js'
 import cors from 'cors';
 import dotenv from 'dotenv';
-import {connectToDatabase} from './db/init.js';
+import { ratelimit } from './rate_limiter/ratelimit.js';
+import { connectToDatabase } from './db/init.js';
 
 import auth from './routes/auth/auth.js';
 import clip from './routes/clip/clip.js';
 
 dotenv.config();
+
 const app = express();
+const PORT = process.env.PORT || 4000;
+
+// ✅ Connect to MongoDB
 await connectToDatabase();
 
-const PORT = process.env.PORT;
+// ✅ Dynamic CORS setup
+const allowedOrigins = [
+  'https://zipp.piyushx.tech',  // your live site
+  'http://localhost:5173'       // local dev
+];
 
-async function startServer() {
-    try{
-        app.use(cors({
-            origin: [
-                'https://zipp.piyushx.tech',
-                'http://localhost:5173'
-            ],
-            credentials: true,
-            exposedHeaders: ['new-access-token', 'new-refresh-token']
-        }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // allow mobile apps / Postman
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS not allowed for origin: ${origin}`));
+  },
+  credentials: true,
+  exposedHeaders: ['new-access-token', 'new-refresh-token']
+}));
 
-        app.use(ratelimit);
-        
-        app.get('/', (req, res) => {
-            res.send('Welcome to the API Gateway');
-        });
-        
-        app.use('/auth', express.json() , auth);
-        app.use('/clip', clip);
-        
-        app.listen(PORT, () => {
-            console.log(`API Gateway running on port ${PORT}`);
-        });
+// ✅ Middleware
+app.use(express.json());
+app.use(ratelimit);
 
-    }
-    catch(error){
-        console.error('❌ Server startup error:', error);
-        process.exit(1);
-    }
-}
+// ✅ Routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the API Gateway 🚀');
+});
 
-startServer();
+app.use('/auth', auth);
+app.use('/clip', clip);
+
+// ✅ Start server
+app.listen(PORT, () => {
+  console.log(`✅ API Gateway running on port ${PORT}`);
+});
