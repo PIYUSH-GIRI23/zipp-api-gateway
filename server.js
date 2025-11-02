@@ -13,22 +13,33 @@ await connectToDatabase();
 
 const PORT = process.env.PORT;
 
-app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true, 
-    exposedHeaders: ['new-access-token', 'new-refresh-token']
-}));
+async function startServer() {
+    try{
+        app.use(cors({
+            origin: 'http://localhost:5173',
+            credentials: true, 
+            exposedHeaders: ['new-access-token', 'new-refresh-token']
+        }));
+        
+        
+        app.use(ratelimit);
+        
+        app.get('/', (req, res) => {
+            res.send('Welcome to the API Gateway');
+        });
+        
+        app.use('/auth', express.json() , auth);
+        app.use('/clip', clip);
+        
+        app.listen(PORT, () => {
+            console.log(`API Gateway running on port ${PORT}`);
+        });
 
+    }
+    catch(error){
+        console.error('❌ Server startup error:', error);
+        process.exit(1);
+    }
+}
 
-app.use(ratelimit);
-
-app.get('/', (req, res) => {
-    res.send('Welcome to the API Gateway');
-});
-
-app.use('/auth', express.json() , auth);
-app.use('/clip', clip);
-
-app.listen(PORT, () => {
-    console.log(`API Gateway running on port ${PORT}`);
-});
+startServer();
