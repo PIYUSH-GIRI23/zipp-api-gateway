@@ -17,6 +17,7 @@ await connectToDatabase();
 
 // ✅ Dynamic CORS setup
 const allowedOrigins = [
+  'https://zipp-client2.vercel.app', // vercel
   'https://zipp.piyx.me',  // your live site
   'http://localhost:5173'       // local dev
 ];
