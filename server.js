@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 import { ratelimit } from './rate_limiter/ratelimit.js';
 import { connectToDatabase } from './db/init.js';
 
-import auth from './routes/auth/auth.js';
-import clip from './routes/clip/clip.js';
+import authRoute from './routes/authRoute.js';
+import clipRoute from './routes/clipRoute.js';
 
 dotenv.config();
 
@@ -17,7 +17,6 @@ await connectToDatabase();
 
 // ✅ Dynamic CORS setup
 const allowedOrigins = [
-  'https://zipp-client2.vercel.app', // vercel
   'https://zipp.piyx.me',  // your live site
   'http://localhost:5173'       // local dev
 ];
@@ -41,8 +40,8 @@ app.get('/', (req, res) => {
   res.send('Welcome to the API Gateway 🚀');
 });
 
-app.use('/auth', auth);
-app.use('/clip', clip);
+app.use('/auth', authRoute);
+app.use('/clip', clipRoute);
 
 // ✅ Start server
 app.listen(PORT, () => {

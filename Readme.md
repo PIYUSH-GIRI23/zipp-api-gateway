@@ -31,30 +31,37 @@
 
 <pre>
 api_gateway/
-├── db/                          # Database connections or models (if any)
+├── controllers/                 # Controller endpoint handlers
+│   ├── authController.js        # Auth controller
+│   └── clipController.js        # Clip controller
+│
+├── db/                          # Database connection setup
 │
 ├── node_modules/                # Installed dependencies
 │
 ├── rate_limiter/                # Custom rate-limiting logic
 │   └── ratelimit.js
 │
-├── routes/                      # API route handlers
-│   ├── auth/                    # Authentication-related routes
-│   │   └── auth.js
-│   ├── clip/                    # Clip-related routes
-|       └── clip.js
-|
-│── utils/                   # Utility functions
-│       └── deviceInfo.js
+├── routes/                      # API Route definitions
+│   ├── authRoute.js             # Auth Express router
+│   └── clipRoute.js             # Clip Express router
+│
+├── services/                    # Service layers to proxy microservices
+│   ├── authService.js           # Auth proxy requests
+│   └── clipService.js           # Clip proxy requests
+│
+├── utils/                       # Utility functions
+│   ├── gatewayError.js          # Custom GatewayError class
+│   └── deviceInfo.js            # Device information parser
 │
 ├── .env                         # Environment variables
-├── .env.config                  # Optional config template
+├── .env.config                  # Environment configuration template
 ├── .gitignore                   # Files ignored by Git
-├── package.json                 # Project metadata & dependencies
+├── package.json                 # Project dependencies & metadata
 ├── package-lock.json            # Locked dependency versions
-├── Readme.md                    # This documentation ❤️
-├── server.js                    # Main entry point
-└── vercel.json                  # Vercel deployment config
+├── Readme.md                    # Project documentation ❤️
+├── server.js                    # Entry point of the Gateway
+└── vercel.json                  # Vercel deployment configuration
 </pre>
 
 ---
