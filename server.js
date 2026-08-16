@@ -17,7 +17,7 @@ await connectToDatabase();
 
 // ✅ Dynamic CORS setup
 const allowedOrigins = [
-  'https://zipp.piyushx.tech',  // your live site
+  'https://zipp.piyx.me',  // your live site
   'http://localhost:5173'       // local dev
 ];
 
