@@ -170,7 +170,8 @@ export async function ratelimit(req, res, next) {
         () => Date.now()
     );
 
-    const blockKey = `block:${clientKey}`;
+    const blockPrefix = process.env.REDIS_BLOCK_KEY_PREFIX || 'zipp:block:';
+    const blockKey = `${blockPrefix}${clientKey}`;
     const blockData = await safeRedisOperation(
         () => redis.get(blockKey),
         () => inMemoryCache.get(blockKey)
@@ -197,7 +198,7 @@ export async function ratelimit(req, res, next) {
     }
 
     // Global server limit with fallback
-    const globalKey = "global_rate_limit";
+    const globalKey = process.env.REDIS_GLOBAL_LIMIT_KEY || "zipp:global_rate_limit";
     const globalCount = await safeRedisOperation(
         async () => {
             const count = await redis.incr(globalKey);
@@ -219,7 +220,8 @@ export async function ratelimit(req, res, next) {
     }
 
     // Per-user per-API token bucket with fallback
-    const bucketKey = `rate_limit:${clientKey}:${api}`;
+    const rateLimitPrefix = process.env.REDIS_RATE_LIMIT_KEY_PREFIX || "zipp:ratelimit:";
+    const bucketKey = `${rateLimitPrefix}${api}:${clientKey}`;
     let bucket = await safeRedisOperation(
         () => redis.get(bucketKey),
         () => inMemoryCache.get(bucketKey)
