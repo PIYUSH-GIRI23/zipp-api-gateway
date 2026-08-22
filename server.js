@@ -13,6 +13,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Trust reverse proxies (Vercel, Nginx, Cloudflare) for real IP detection
+app.set('trust proxy', true);
+
 // 1. Hide framework details
 app.disable('x-powered-by');
 

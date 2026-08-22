@@ -92,21 +92,23 @@ const blacklist = new Set((process.env.BLACKLIST || "").split(",").filter(Boolea
 
 async function getClientKey(req) {
   const authCollection = getAuthCollection();
-  let id=req.ip;
-  if(req.headers['token']){
-      const token = JSON.parse(req.headers['token']).access_token;
-      try{
-          const decoded = jwt.verify(token , process.env.JWT_SECRET);
-          const user = await  authCollection.findOne({_id: new ObjectId(decoded.userId)});
-          if(user){
-            
+  const realIp = req.headers['cf-connecting-ip'] || 
+                 req.headers['x-real-ip'] || 
+                 (req.headers['x-forwarded-for'] ? req.headers['x-forwarded-for'].split(',')[0].trim() : null) || 
+                 req.ip;
+  let id = realIp;
+  if (req.headers['token']) {
+      try {
+          const token = JSON.parse(req.headers['token']).access_token;
+          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+          const user = await authCollection.findOne({ _id: new ObjectId(decoded.userId) });
+          if (user) {
               id = user._id.toString();
           }
+      } catch (err) {
+          id = realIp;
       }
-      catch(err){
-        id=req.ip;
-      }
-    }
+  }
   return id;
 }
   
