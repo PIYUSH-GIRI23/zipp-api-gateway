@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.get('/google', authController.google);
 router.get('/google/callback', authController.googleCallback);
+router.post('/send-signup-otp', authController.sendSignupOtp);
+router.post('/verify-signup-otp', authController.verifySignupOtp);
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.post('/check-email', authController.checkEmail);

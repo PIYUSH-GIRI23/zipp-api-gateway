@@ -20,6 +20,7 @@
 
 ✅ **Authentication Middleware** — Secure API access using JWT or session-based auth  
 🚦 **Rate Limiting** — Prevent abuse with a configurable request rate limiter  
+🔐 **Signup & Account Gateway** — Direct proxying for `/auth/send-signup-otp`, `/auth/verify-signup-otp`, and user management  
 🧩 **Modular Routes** — Organized routes for easy scalability (`auth`, `clip`, etc.)  
 ⚙️ **Environment Config** — Centralized `.env` management  
 ☁️ **Vercel Ready** — Seamless cloud deployment  

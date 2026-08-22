@@ -26,6 +26,28 @@ export async function googleCallback(req, res) {
     }
 }
 
+export async function sendSignupOtp(req, res) {
+    try {
+        const deviceInfo = getDeviceInfo(req);
+        const { status, data } = await authService.sendSignupOtp(req.body, deviceInfo);
+        return res.status(status).json(data);
+    } catch (err) {
+        console.error('Send signup OTP error:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+export async function verifySignupOtp(req, res) {
+    try {
+        const deviceInfo = getDeviceInfo(req);
+        const { status, data } = await authService.verifySignupOtp(req.body, deviceInfo);
+        return res.status(status).json(data);
+    } catch (err) {
+        console.error('Verify signup OTP error:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 export async function signup(req, res) {
     try {
         const deviceInfo = getDeviceInfo(req);

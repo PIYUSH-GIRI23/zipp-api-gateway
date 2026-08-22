@@ -41,6 +41,28 @@ export async function googleAuthCallback(queryParams) {
     return { redirected: false, status: response.status, data };
 }
 
+export async function sendSignupOtp(data, deviceInfo) {
+    const api = `${AUTH_ENDPOINT}/send-signup-otp`;
+    const response = await fetch(api, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, deviceInfo })
+    });
+    const result = await response.json();
+    return { status: response.status, data: result };
+}
+
+export async function verifySignupOtp(data, deviceInfo) {
+    const api = `${AUTH_ENDPOINT}/verify-signup-otp`;
+    const response = await fetch(api, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, deviceInfo })
+    });
+    const result = await response.json();
+    return { status: response.status, data: result };
+}
+
 export async function signup(data, deviceInfo) {
     const api = `${AUTH_ENDPOINT}${SIGNUP_ENDPOINT}`;
     const response = await fetch(api, {
